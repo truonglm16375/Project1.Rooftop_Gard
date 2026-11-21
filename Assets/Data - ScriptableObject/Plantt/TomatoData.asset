@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89b8e1babce31f148987031e34444ca8, type: 3}
+  m_Name: TomatoData
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  Name: "C\xE0 chua"
+  icon: {fileID: 7482667652216324306, guid: d96191789ee8a45499dd1fececc7f8f4, type: 3}
+  stateData:
+  - state: 0
+    sprite: {fileID: -2413806693520163455, guid: c6ba1be248fa34d4eb1415dca1db6254, type: 3}
+    timeNeeded: 1
+  - state: 1
+    sprite: {fileID: -9095717837082945937, guid: 1bc0ca96b2f53ed40be18d89ce76d0c2, type: 3}
+    timeNeeded: 1
+  - state: 2
+    sprite: {fileID: 7482667652216324306, guid: 048e57a6f6c1de04796b749a150900d3, type: 3}
+    timeNeeded: 1
+  - state: 3
+    sprite: {fileID: 7482667652216324306, guid: 06c4311857f765c4587f3b57ced3da3f, type: 3}
+    timeNeeded: 0
+  - state: 4
+    sprite: {fileID: 7482667652216324306, guid: 3a8680ad54929f446a9fe63acdc0d61f, type: 3}
+    timeNeeded: 1
+  - state: 5
+    sprite: {fileID: 7482667652216324306, guid: d5d0db4ec962b1548a06e28f7c87e582, type: 3}
+    timeNeeded: 0
+  canRegrow: 1
+  timeUntilWithered: 3

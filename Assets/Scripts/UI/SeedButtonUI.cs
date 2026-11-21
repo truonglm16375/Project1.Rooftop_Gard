@@ -13,17 +13,18 @@ public class SeedButtonUI : MonoBehaviour
     {
         
     }
-
-    // Update is called once per frame
-    void Update()
+    public void SetUp(PlantData data)
     {
-        
+        iconImg.sprite = data.icon;
+        nameText.text = data.Name;
+        plantData = data;
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(GieoHat);
+        var seedMenu = GetComponentInParent<SeedMenuUI>();
+        button.onClick.AddListener(() => UIManager.Instance.ClosePanel(seedMenu));
     }
-
-    public void SetUp(PlantData data, Action<PlantData> onClickCallback)
+    private void GieoHat()
     {
-        iconImg.sprite = data.seedIcon;
-        nameText.text = data.plantName;
-        button.onClick.AddListener(() => onClickCallback?.Invoke(data));
+        PlotManager.Instance.GieoHat(plantData);
     }
 }
