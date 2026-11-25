@@ -83,8 +83,22 @@ public class PlantController : MonoBehaviour
         hoursDelta = 0;
         ChangePlantState(PlantState.Seed);
     }
+
+    public void Harvest()
+    {
+        if (currentState != PlantState.Mature) return;
+        Inventory.Instance.AddItem(plantData.plantProduct, plantData.yield);
+        if (plantData.canRegrow)
+        {
+            ChangePlantState(PlantState.Harvested);
+        }
+        else
+        {
+            ClearPlant();
+        }
+    }
     
-    // Xử lí event 
+    // Xử lí OnHourPassed do GameClock invoke
     private void HandleHourPassed(int hoursPassed)
     {
         if (!isPlanted) return;
@@ -103,12 +117,7 @@ public class PlantController : MonoBehaviour
         // Trường hợp cây sau khi thu hoạch đang trong chu kỳ tái sinh quả (canRegrow)
         if (currentState == PlantState.Harvested && plantData.canRegrow)
         {
-            if (hoursNeededForNextState > 0 && hoursDelta >= hoursNeededForNextState)
-            {
-                hoursDelta = 0;
-                ChangePlantState(PlantState.Growing);
-            }
-            return;
+            ChangePlantState(PlantState.Growing);
         }
 
         // Tăng trưởng tuần tự: Seed (0) -> Sprout (1) -> Growing (2) -> Mature (3)
@@ -116,7 +125,10 @@ public class PlantController : MonoBehaviour
         {
             hoursDelta -= hoursNeededForNextState;
             if (currentState < PlantState.Mature) ChangePlantState(currentState + 1);
-            else break;
+            else {
+                hoursDelta = 0;
+                break;
+            }
         }
     }
 
@@ -126,15 +138,8 @@ public class PlantController : MonoBehaviour
         currentState = newState;
         OnPlantStateChanged?.Invoke(currentState);
 
-        if (plantData != null)
-        {
-            Sprite newSprite = plantData.GetSpriteforState(currentState);
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.sprite = newSprite;
-            }
-            hoursNeededForNextState = plantData.GetTimeNeeded(currentState);
-        }
+        spriteRenderer.sprite = plantData.GetSpriteforState(currentState);
+        hoursNeededForNextState = plantData.GetTimeNeeded(currentState);
     }
 
     // Xóa cây (khi dọn ô đất hoặc reset)
@@ -147,5 +152,6 @@ public class PlantController : MonoBehaviour
         {
             spriteRenderer.sprite = null;
         }
+        gameObject.SetActive(false);
     }
 }

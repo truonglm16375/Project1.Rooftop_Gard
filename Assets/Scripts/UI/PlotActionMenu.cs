@@ -13,15 +13,10 @@ public class PlotActionMenu : MonoBehaviour
     [SerializeField] private Button tuoiNuocB;
     [SerializeField] private Button thuHoachB;
 
-    [Header("Click Outside / Blocker")]
-    [Tooltip("Panel bắt click ra ngoài (Sibling nằm dưới menu) để tự động đóng menu khi người chơi click ra ngoài")]
-    [SerializeField] private PanelClickHandler backgroundBlocker;
-
     [Header("Tùy chọn hiển thị")]
     [Tooltip("Nếu true, nút không thỏa mãn sẽ bị ẩn (SetActive false). Nếu false, nút chỉ bị mờ/vô hiệu hóa click (interactable = false)")]
     [SerializeField] private bool hideDisabledButtons = false;
 
-    public PanelClickHandler BackgroundBlocker => backgroundBlocker;
 
     private void Awake()
     {
@@ -29,7 +24,6 @@ public class PlotActionMenu : MonoBehaviour
         {
             plotController = GetComponentInParent<PlotController>();
         }
-        InitBlocker();
     }
 
     private void OnEnable()
@@ -37,14 +31,6 @@ public class PlotActionMenu : MonoBehaviour
         if (plotController == null)
         {
             plotController = GetComponentInParent<PlotController>();
-        }
-
-        // Đăng ký và bật Blocker click-outside
-        InitBlocker();
-        if (backgroundBlocker != null)
-        {
-            backgroundBlocker.OnClickCallback = OnClickOutside;
-            backgroundBlocker.gameObject.SetActive(true);
         }
 
         // Đăng ký sự kiện các nút
@@ -61,13 +47,6 @@ public class PlotActionMenu : MonoBehaviour
 
     private void OnDisable() 
     {
-        // Hủy đăng ký Blocker
-        if (backgroundBlocker != null)
-        {
-            backgroundBlocker.OnClickCallback = null;
-            backgroundBlocker.gameObject.SetActive(false);
-        }
-
         // Hủy đăng ký các nút
         if (gieoHatB != null) gieoHatB.onClick.RemoveListener(OnGieoHatB);
         if (tuoiNuocB != null) tuoiNuocB.onClick.RemoveListener(OnTuoiNuocB);
@@ -76,68 +55,24 @@ public class PlotActionMenu : MonoBehaviour
         PlantController.OnPlantStateChanged -= HandlePlantStateChanged;
     }
 
-    /// <summary>
-    /// Tự động tìm Background Blocker nếu chưa được gán thủ công trong Inspector
-    /// </summary>
-    private void InitBlocker()
-    {
-        if (backgroundBlocker == null)
-        {
-            if (transform.parent != null)
-            {
-                backgroundBlocker = transform.parent.GetComponentInChildren<PanelClickHandler>(true);
-            }
-            if (backgroundBlocker == null)
-            {
-                backgroundBlocker = GetComponentInChildren<PanelClickHandler>(true);
-            }
-        }
-    }
-
     private void HandlePlantStateChanged(PlantState newState)
     {
         UpdateButtonStates();
     }
 
-    /// <summary>
-    /// Được gọi khi người chơi click vào vùng Blocker phía sau menu
-    /// </summary>
-    private void OnClickOutside()
-    {
-        Debug.Log("Đã click ra ngoài menu thao tác -> Đóng PlotActionMenu.");
-        if (plotController != null)
-        {
-            plotController.DisableActionMenu();
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
-    }
-
     // ==========================================
     // CÁC HÀM KIỂM TRA ĐIỀU KIỆN (VALIDATION)
     // ==========================================
-
-    /// <summary>
-    /// Điều kiện để gieo hạt: Ô đất chưa có cây trồng
-    /// </summary>
     public bool CanPlant()
     {
         return plotController != null && !plotController.isPlanted;
     }
 
-    /// <summary>
-    /// Điều kiện để tưới nước: Ô đất đã có cây (sau này có thể thêm: chưa được tưới trong ngày)
-    /// </summary>
     public bool CanWater()
     {
         return plotController != null && plotController.isPlanted;
     }
 
-    /// <summary>
-    /// Điều kiện để thu hoạch: Ô đất có cây và cây đã ở giai đoạn chín (Mature)
-    /// </summary>
     public bool CanHarvest()
     {
         return plotController != null && plotController.isPlanted && plotController.currentState == PlantState.Mature;
@@ -173,18 +108,8 @@ public class PlotActionMenu : MonoBehaviour
             UpdateButtonStates();
             return;
         }
-
-        Debug.Log("Đã bấm nút Gieo hạt!");
-        if (seedMenu != null)
-        {
-            Debug.Log("Mở SeedMenu");
-            UIManager.Instance.OpenPanel(seedMenu, true);
-        }
-
-        if (plotController != null)
-        {
-            plotController.DisableActionMenu();
-        }
+        UIManager.Instance.OpenPanel(seedMenu, true);
+        plotController.DisableActionMenu();
     }
 
     public void OnTuoiNuocB()
@@ -200,10 +125,7 @@ public class PlotActionMenu : MonoBehaviour
         Debug.Log("Đã bấm nút Tưới nước!");
         // TODO: Triển khai logic tưới nước sau này ở đây
         
-        if (plotController != null)
-        {
-            plotController.DisableActionMenu();
-        }
+        plotController.DisableActionMenu();
     }
 
     public void OnThuHoachB()
@@ -217,11 +139,7 @@ public class PlotActionMenu : MonoBehaviour
         }
 
         Debug.Log("Đã bấm nút Thu hoạch!");
-        // TODO: Triển khai logic thu hoạch sau này ở đây
-
-        if (plotController != null)
-        {
-            plotController.DisableActionMenu();
-        }
+        plotController.ThuHoach();
+        plotController.DisableActionMenu();
     }
 }

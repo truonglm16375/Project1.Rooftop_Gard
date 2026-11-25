@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
 
     [Header("Optional: Panel mở sẵn khi vào game")]
     [SerializeField] private BaseUIPanel initialPanel;
+
+    [SerializeField] private GameObject blocker;
+    [SerializeField] private Button blockerButton;
 
     private readonly Stack<BaseUIPanel> panelStack = new Stack<BaseUIPanel>();
 
@@ -28,19 +33,26 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         if (initialPanel != null) OpenPanel(initialPanel);
+        blocker.SetActive(false);
+        blockerButton.onClick.AddListener(CloseTopPanel);
     }
 
     private void Update()
     {
         // Bấm ESC để đóng cửa sổ trên cùng
-        if (Input.GetKeyDown(KeyCode.Escape) && panelStack.Count > 0)
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
             CloseTopPanel();
+        }
     }
 
     public void OpenPanel(BaseUIPanel panel, bool hidePrevious = false)
     {
         if (panel == null || panel.IsOpen) return;
-        if (hidePrevious && panelStack.Count > 0) panelStack.Peek().Hide(false);
+        if (hidePrevious && panelStack.Count > 0) {
+            BaseUIPanel topPanel = panelStack.Pop();
+            topPanel.Hide(false);
+        }
         panel.Show();
         panelStack.Push(panel);
     }
@@ -72,6 +84,25 @@ public class UIManager : MonoBehaviour
             }
             while (temp.Count > 0) panelStack.Push(temp.Pop());
         }
+
+        if (panelStack.Count > 0)
+        {
+            UpdateBlockerBehind(panelStack.Peek());
+        }
+        else
+        {
+            blocker.SetActive(false);
+        }
+    }
+
+    private void UpdateBlockerBehind(BaseUIPanel targetPanel)
+    {
+        blocker.SetActive(true);
+        // Bước 1: Ép panel mục tiêu lên vị trí cuối cùng (trên cùng màn hình)
+        targetPanel.transform.SetAsLastSibling();
+        // Bước 2: Đặt Blocker nằm ngay trước panel mục tiêu 1 bậc
+        int targetIndex = targetPanel.transform.GetSiblingIndex();
+        blocker.transform.SetSiblingIndex(targetIndex - 1);
     }
 
     public void CloseAll()
