@@ -1,39 +1,62 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
-public class Inventory : MonoBehaviour 
+public sealed class Inventory : MonoBehaviour
 {
-    public List<ItemStack> item = new List<ItemStack>(); 
-    private static Inventory _instance;
-    public static Inventory Instance
+    public List<ItemStack> slots = new List<ItemStack>();
+    public static Inventory Instance {get; private set;}
+
+    // =================================================
+    [Header("Test Inspector")]
+    [SerializeField] private SeedData testSeed; // Ô để kéo TomatoSeed vào
+    [ContextMenu("Test: Thêm 5 hạt giống vào kho")]
+    public void AddTestSeed()
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindFirstObjectByType<Inventory>();
-                if (_instance == null)
-                {
-                    GameObject go = new GameObject("Inventory");
-                    _instance = go.AddComponent<Inventory>();
-                }
-            }
-            return _instance;
-        }
+        if (testSeed == null) return;
+        AddItem(testSeed, 5);
+        Debug.Log("Đã thêm 5 " + testSeed.itemName); // itemName kế thừa từ ItemData[cite: 10, 11]
     }
+    // =================================================
+
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        _instance = this;
+        Instance = this;
     }
 
-    private void Start()
+    public List<ItemStack> GetItemsByType<T>() where T : ItemData
     {
-        
+        List<ItemStack> filteredList = new List<ItemStack>();
+        foreach (ItemStack slot in slots)
+        {
+            if (slot.data != null && slot.data is T)
+            {
+                filteredList.Add(slot);
+            }
+        }
+        return filteredList;
+    }
+
+    public void AddItem(ItemData itemToAdd, int amount)
+    {
+        // Nếu trong kho đã có sẵn hạt này thì cộng dồn số lượng
+        foreach (ItemStack slot in slots)
+        {
+            if (slot.data == itemToAdd)
+            {
+                slot.stock += amount;
+                return;
+            }
+        }
+
+        // Nếu chưa có thì tạo ô mới[cite: 8, 9]
+        ItemStack newStack = new ItemStack { data = itemToAdd, stock = amount };
+        slots.Add(newStack);
     }
 }

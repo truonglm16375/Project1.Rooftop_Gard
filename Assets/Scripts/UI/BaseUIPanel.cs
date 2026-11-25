@@ -1,23 +1,35 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
 public abstract class BaseUIPanel : MonoBehaviour
 {
     protected CanvasGroup canvasGroup;
-    protected Canvas subCanvas;
+    protected Canvas canvas;
     public bool IsOpen { get; private set; }
+
+    [Header("Base UI Settings")]
+    [SerializeField] protected Button closeButton; 
+    // Để trống nếu UI này không có nút tắt
+    
 
     protected virtual void Awake()
     {
+        if (closeButton != null)
+        {
+            closeButton.onClick.AddListener(OnCloseButtonClicked);
+        }
+
         canvasGroup = GetComponent<CanvasGroup>();
-        subCanvas = GetComponent<Canvas>();
+        canvas = GetComponent<Canvas>();
+
         // Mặc định ẩn toàn bộ khi khởi tạo, UIManager sẽ quyết định mở cái nào
         HideImmediate(false);
     }
 
     public virtual void Show()
     {
-        if(subCanvas != null && !subCanvas.enabled) subCanvas.enabled = true;
+        if(canvas != null && !canvas.enabled) canvas.enabled = true;
         IsOpen = true;
         canvasGroup.alpha = 1f;
         canvasGroup.interactable = true;
@@ -38,15 +50,22 @@ public abstract class BaseUIPanel : MonoBehaviour
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
-        if (disableCanvas && subCanvas != null) subCanvas.enabled = false;
+        if (disableCanvas && canvas != null) canvas.enabled = false;
     }
 
-    // Nút Close bên trong Panel nên gọi hàm này thay vì gọi thẳng Hide()
-    public void Close()
+    protected void OnCloseButtonClicked()
     {
-        UIManager.Instance.ClosePanel(this);
+        Hide(false);
     }
 
     protected virtual void OnShow() { }
     protected virtual void OnHide() { }
+
+    protected virtual void OnDestroy()
+    {
+        if (closeButton != null)
+        {
+            closeButton.onClick.RemoveListener(OnCloseButtonClicked);
+        }
+    }
 }

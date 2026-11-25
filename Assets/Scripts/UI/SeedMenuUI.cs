@@ -16,7 +16,7 @@ public class SeedMenuUI : BaseUIPanel
     {
         // Xoa button cu va Instantiate button moi
         foreach (Transform child in buttonContainer) Destroy(child.gameObject);
-        List<ItemStack> seedStacks = InventoryManager.Instance.GetItemsByType<SeedData>();
+        List<ItemStack> seedStacks = Inventory.Instance.GetItemsByType<SeedData>();
         foreach (ItemStack seed in seedStacks)
         {
             GameObject newBtn = Instantiate(buttonPrefab, buttonContainer);
