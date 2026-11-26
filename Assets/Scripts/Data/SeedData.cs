@@ -4,6 +4,5 @@ using UnityEngine;
 public class SeedData : ItemData
 {
     public int price;
-    public int stock;
     public PlantData plantData;
 }

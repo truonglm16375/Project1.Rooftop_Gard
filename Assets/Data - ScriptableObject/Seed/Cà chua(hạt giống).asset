@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3301f16cc157a9040a887036c6f33543, type: 3}
-  m_Name: TomatoSeed
+  m_Name: "C\xE0 chua(h\u1EA1t gi\u1ED1ng)"
   m_EditorClassIdentifier: Assembly-CSharp::SeedData
   itemName: "H\u1EA1t gi\u1ED1ng c\xE0 chua"
   itemIcon: {fileID: 0}

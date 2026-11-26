@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89b8e1babce31f148987031e34444ca8, type: 3}
-  m_Name: TomatoData
+  m_Name: "C\xE2y c\xE0 chua"
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   Name: "C\xE0 chua"
   icon: {fileID: 7482667652216324306, guid: d96191789ee8a45499dd1fececc7f8f4, type: 3}
@@ -34,4 +34,7 @@ MonoBehaviour:
     sprite: {fileID: 7482667652216324306, guid: d5d0db4ec962b1548a06e28f7c87e582, type: 3}
     timeNeeded: 0
   canRegrow: 1
-  timeUntilWithered: 3
+  timeUntilWithered: 6
+  minYield: 3
+  maxYield: 6
+  plantProduct: {fileID: 11400000, guid: 174291d979578124a91668b15bbe9bb2, type: 2}
