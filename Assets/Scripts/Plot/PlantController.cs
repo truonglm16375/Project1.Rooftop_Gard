@@ -8,10 +8,11 @@ public enum PlantState
     // Cây thiếu nước quá số giờ quy định: Withered (Héo úa)
     Seed,       // 0: Hạt giống
     Sprout,     // 1: Mầm non
-    Growing,    // 2: Đang lớn
-    Mature,     // 3: Trưởng thành (chín / có thể thu hoạch)
-    Harvested,  // 4: Đã thu hoạch (chờ tái sinh quả)
-    Withered    // 5: Héo úa
+    Growing1,    // 2: Đang lớn
+    Growing2,
+    Growing3,   // Cây về trạng thái này sau khi Harvest
+    Mature, 
+    // Withered - future development
 }
 
 public class PlantController : MonoBehaviour 
@@ -30,18 +31,8 @@ public class PlantController : MonoBehaviour
     // Event thông báo khi cây đổi trạng thái
     public static event Action<PlantState> OnPlantStateChanged;
     
-    // Khởi tạo, thiết lập SpriteRenderer 
     private void Awake() 
     {
-        if (spriteRenderer == null)
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer == null)
-            {
-                spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-            }
-        }
-
         // Đảm bảo hiển thị cây nổi trên bề mặt ô đất
         SpriteRenderer parentRenderer = GetComponentInParent<SpriteRenderer>();
         if (parentRenderer != null && spriteRenderer != null)
@@ -53,14 +44,7 @@ public class PlantController : MonoBehaviour
 
     private void Start() 
     {
-        if (plantData != null)
-        {
-            Plant(plantData);
-        }
-        else if (spriteRenderer != null && !isPlanted)
-        {
-            spriteRenderer.sprite = null;
-        }
+
     }
 
     // Xử lí event
@@ -90,7 +74,7 @@ public class PlantController : MonoBehaviour
         Inventory.Instance.AddItem(plantData.plantProduct, UnityEngine.Random.Range(plantData.minYield, plantData.maxYield));
         if (plantData.canRegrow)
         {
-            ChangePlantState(PlantState.Harvested);
+            ChangePlantState(PlantState.Growing3);
         }
         else
         {
@@ -122,19 +106,11 @@ public class PlantController : MonoBehaviour
     public void Grow(int hours = 1)
     {
         if (!isPlanted) return;
-        // Cây đã chín (Mature) hoặc đã héo (Withered) thì không tiếp tục tăng trưởng tự động
-        if (currentState == PlantState.Withered || currentState == PlantState.Mature) return;
+        if (currentState == PlantState.Mature) return;
 
         hoursDelta += hours;
 
-        // Trường hợp cây sau khi thu hoạch đang trong chu kỳ tái sinh quả (canRegrow)
-        if (currentState == PlantState.Harvested && plantData.canRegrow)
-        {
-            if (hoursNeededForNextState > 0 && hoursDelta >= hoursNeededForNextState)
-                ChangePlantState(PlantState.Mature);
-        }
-
-        // Tăng trưởng tuần tự: Seed (0) -> Sprout (1) -> Growing (2) -> Mature (3)
+        // Tăng trưởng tuần tự: Seed (0) -> Sprout (1) -> Growing 1,2,3 (2,3,4) -> Mature (5)
         while (hoursNeededForNextState > 0 && hoursDelta >= hoursNeededForNextState)
         {
             hoursDelta -= hoursNeededForNextState;
