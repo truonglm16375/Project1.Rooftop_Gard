@@ -3,7 +3,7 @@ using System;
 
 public enum PlantState 
 {
-    // Cây tái sinh (canRegrow): Seed -> Sprout -> Growing -> Mature -> Harvested -> Growing -> Mature...
+    // Cây tái sinh (canRegrow): Seed -> Sprout -> Growing -> Mature -> Harvested -> Mature...
     // Cây một vụ: Seed -> Sprout -> Growing -> Mature -> (Thu hoạch / Hủy)
     // Cây thiếu nước quá số giờ quy định: Withered (Héo úa)
     Seed,       // 0: Hạt giống
@@ -87,7 +87,7 @@ public class PlantController : MonoBehaviour
     public void Harvest()
     {
         if (currentState != PlantState.Mature) return;
-        Inventory.Instance.AddItem(plantData.plantProduct, plantData.yield);
+        Inventory.Instance.AddItem(plantData.plantProduct, UnityEngine.Random.Range(plantData.minYield, plantData.maxYield));
         if (plantData.canRegrow)
         {
             ChangePlantState(PlantState.Harvested);
@@ -96,6 +96,19 @@ public class PlantController : MonoBehaviour
         {
             ClearPlant();
         }
+    }
+
+    // Xóa cây (khi dọn ô đất hoặc reset)
+    public void ClearPlant()
+    {
+        plantData = null;
+        hoursDelta = 0;
+        hoursNeededForNextState = 0;
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sprite = null;
+        }
+        gameObject.SetActive(false);
     }
     
     // Xử lí OnHourPassed do GameClock invoke
@@ -117,7 +130,8 @@ public class PlantController : MonoBehaviour
         // Trường hợp cây sau khi thu hoạch đang trong chu kỳ tái sinh quả (canRegrow)
         if (currentState == PlantState.Harvested && plantData.canRegrow)
         {
-            ChangePlantState(PlantState.Growing);
+            if (hoursNeededForNextState > 0 && hoursDelta >= hoursNeededForNextState)
+                ChangePlantState(PlantState.Mature);
         }
 
         // Tăng trưởng tuần tự: Seed (0) -> Sprout (1) -> Growing (2) -> Mature (3)
@@ -140,18 +154,5 @@ public class PlantController : MonoBehaviour
 
         spriteRenderer.sprite = plantData.GetSpriteforState(currentState);
         hoursNeededForNextState = plantData.GetTimeNeeded(currentState);
-    }
-
-    // Xóa cây (khi dọn ô đất hoặc reset)
-    public void ClearPlant()
-    {
-        plantData = null;
-        hoursDelta = 0;
-        hoursNeededForNextState = 0;
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.sprite = null;
-        }
-        gameObject.SetActive(false);
     }
 }

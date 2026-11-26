@@ -23,7 +23,8 @@ public class PlantData : ScriptableObject
     [Header("Đặc tính cây")]
     public bool canRegrow;
     public int timeUntilWithered; // Tính theo giờ (hours)
-    public int yield;
+    public int minYield;
+    public int maxYield;
     public PlantProductData plantProduct;
 
     public Sprite GetSpriteforState(PlantState target)

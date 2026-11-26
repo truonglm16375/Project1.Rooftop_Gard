@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17da19f64ba7da14bbdf5f3d74f68790, type: 3}
-  m_Name: NewPlantProductData
+  m_Name: "C\xE0 chua(qu\u1EA3)"
   m_EditorClassIdentifier: Assembly-CSharp::PlantProductData
   itemName: "C\xE0 chua"
   itemIcon: {fileID: 0}

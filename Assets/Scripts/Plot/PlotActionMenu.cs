@@ -12,10 +12,11 @@ public class PlotActionMenu : MonoBehaviour
     [SerializeField] private Button gieoHatB;
     [SerializeField] private Button tuoiNuocB;
     [SerializeField] private Button thuHoachB;
+    [SerializeField] private Button donDepB;
 
     [Header("Tùy chọn hiển thị")]
     [Tooltip("Nếu true, nút không thỏa mãn sẽ bị ẩn (SetActive false). Nếu false, nút chỉ bị mờ/vô hiệu hóa click (interactable = false)")]
-    [SerializeField] private bool hideDisabledButtons = false;
+    [SerializeField] private bool hideDisabledButtons = true;
 
 
     private void Awake()
@@ -37,6 +38,7 @@ public class PlotActionMenu : MonoBehaviour
         if (gieoHatB != null) gieoHatB.onClick.AddListener(OnGieoHatB);
         if (tuoiNuocB != null) tuoiNuocB.onClick.AddListener(OnTuoiNuocB);
         if (thuHoachB != null) thuHoachB.onClick.AddListener(OnThuHoachB);
+        if (donDepB != null) donDepB.onClick.AddListener(OnDonDepB);
 
         // Lắng nghe khi cây đổi trạng thái để cập nhật nút tức thời
         PlantController.OnPlantStateChanged += HandlePlantStateChanged;
@@ -51,6 +53,7 @@ public class PlotActionMenu : MonoBehaviour
         if (gieoHatB != null) gieoHatB.onClick.RemoveListener(OnGieoHatB);
         if (tuoiNuocB != null) tuoiNuocB.onClick.RemoveListener(OnTuoiNuocB);
         if (thuHoachB != null) thuHoachB.onClick.RemoveListener(OnThuHoachB);
+        if (donDepB != null) donDepB.onClick.RemoveListener(OnDonDepB);
 
         PlantController.OnPlantStateChanged -= HandlePlantStateChanged;
     }
@@ -67,15 +70,17 @@ public class PlotActionMenu : MonoBehaviour
     {
         return plotController != null && !plotController.isPlanted;
     }
-
     public bool CanWater()
     {
         return plotController != null && plotController.isPlanted;
     }
-
     public bool CanHarvest()
     {
         return plotController != null && plotController.isPlanted && plotController.currentState == PlantState.Mature;
+    }
+    public bool CanClear()
+    {
+        return plotController != null && plotController.isPlanted;
     }
 
     // ==========================================
@@ -86,6 +91,7 @@ public class PlotActionMenu : MonoBehaviour
         SetButtonState(gieoHatB, CanPlant());
         SetButtonState(tuoiNuocB, CanWater());
         SetButtonState(thuHoachB, CanHarvest());
+        SetButtonState(donDepB, CanClear());
     }
 
     private void SetButtonState(Button btn, bool isAllowed)
@@ -101,45 +107,29 @@ public class PlotActionMenu : MonoBehaviour
 
     public void OnGieoHatB()
     {
-        // Return sớm nếu không thỏa mãn điều kiện gieo hạt
-        if (!CanPlant())
-        {
-            Debug.LogWarning("Không thể gieo hạt: Ô đất đã có cây trồng!");
-            UpdateButtonStates();
-            return;
-        }
         UIManager.Instance.OpenPanel(seedMenu, true);
         plotController.DisableActionMenu();
     }
 
     public void OnTuoiNuocB()
     {
-        // Return sớm nếu không thỏa mãn điều kiện tưới nước
-        if (!CanWater())
-        {
-            Debug.LogWarning("Không thể tưới nước: Ô đất chưa có cây trồng!");
-            UpdateButtonStates();
-            return;
-        }
-
         Debug.Log("Đã bấm nút Tưới nước!");
         // TODO: Triển khai logic tưới nước sau này ở đây
-        
+    
         plotController.DisableActionMenu();
     }
 
     public void OnThuHoachB()
     {
-        // Return sớm nếu không thỏa mãn điều kiện thu hoạch
-        if (!CanHarvest())
-        {
-            Debug.LogWarning("Không thể thu hoạch: Cây chưa chín hoặc ô đất trống!");
-            UpdateButtonStates();
-            return;
-        }
-
         Debug.Log("Đã bấm nút Thu hoạch!");
         plotController.ThuHoach();
+        plotController.DisableActionMenu();
+    }
+
+    public void OnDonDepB()
+    {
+        Debug.Log("Đã bấm nút Don Dep!");
+        plotController.DonDep();
         plotController.DisableActionMenu();
     }
 }

@@ -58,4 +58,10 @@ public class PlotController : MonoBehaviour, IPointerClickHandler
         plantController.Harvest();
         DisableActionMenu();
     }
+
+    public void DonDep()
+    {
+        plantController.ClearPlant();
+        DisableActionMenu();
+    }
 }
