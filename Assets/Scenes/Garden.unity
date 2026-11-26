@@ -6227,7 +6227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37bea429e50a2be41b20fac4a10add16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameClock
-  timeScale: 1
+  timeScale: 10
   getUpTime: 300
   isPaused: 0
 --- !u!4 &2044370853

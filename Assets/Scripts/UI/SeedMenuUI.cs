@@ -21,7 +21,7 @@ public class SeedMenuUI : BaseUIPanel
         {
             GameObject newBtn = Instantiate(buttonPrefab, buttonContainer);
             if (seed.data is SeedData seedData)
-                newBtn.GetComponent<SeedButtonUI>().SetUp(seedData.plantData);
+                newBtn.GetComponent<SeedButtonUI>().SetUp(seedData);
         }
     }
 

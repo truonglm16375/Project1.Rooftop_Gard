@@ -13,23 +13,24 @@ public class SeedButtonUI : MonoBehaviour
     {
         
     }
-    public void SetUp(PlantData data)
+    public void SetUp(SeedData data)
     {
         // Gán giá trị cho thuộc tính của button
-        iconImg.sprite = data.icon;
-        nameText.text = data.Name;
-        plantData = data;
+        iconImg.sprite = data.itemIcon;
+        nameText.text = data.itemName;
+        plantData = data.plantData;
 
         // Khi click sẽ gọi hàm gieo hạt, và đóng seedMenu qua UIManager
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(GieoHat);
+        button.onClick.AddListener(() => GieoHat(data));
         var seedMenu = GetComponentInParent<SeedMenuUI>();
         button.onClick.AddListener(() => UIManager.Instance.ClosePanel(seedMenu));
     }
 
     // Chỉ định PlotManager thực hiện Gieo hạt
-    private void GieoHat()
+    private void GieoHat(SeedData data)
     {
+        if(!Inventory.Instance.SubtractItem(data, 1)) return;
         PlotManager.Instance.GieoHat(plantData);
     }
 }

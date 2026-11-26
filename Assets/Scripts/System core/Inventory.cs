@@ -19,7 +19,6 @@ public sealed class Inventory : MonoBehaviour
     }
     // =================================================
 
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,9 +53,24 @@ public sealed class Inventory : MonoBehaviour
                 return;
             }
         }
-
-        // Nếu chưa có thì tạo ô mới[cite: 8, 9]
+        // Nếu chưa có thì tạo ô mới
         ItemStack newStack = new ItemStack { data = itemToAdd, stock = amount };
         slots.Add(newStack);
+    }
+
+    public bool SubtractItem(ItemData item, int amount)
+    {
+        foreach (ItemStack slot in slots)
+        {
+            if (slot.data == item)
+            {
+                if (slot.stock < amount) return false;
+                slot.stock -= amount;
+                if (slot.stock == 0) slots.Remove(slot);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
