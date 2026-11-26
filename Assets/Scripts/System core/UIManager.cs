@@ -10,8 +10,14 @@ public class UIManager : MonoBehaviour
     [Header("Optional: Panel mở sẵn khi vào game")]
     [SerializeField] private BaseUIPanel initialPanel;
 
+    [Header("Cài đặt background blocker")]
     [SerializeField] private GameObject blocker;
     [SerializeField] private Button blockerButton;
+
+    [Header("Main canvas")]
+    [SerializeField] private GameObject staticCanvas;
+    [SerializeField] private GameObject dynamicCanvas;
+    [SerializeField] private GameObject popupCanvas;
 
     private readonly Stack<BaseUIPanel> panelStack = new Stack<BaseUIPanel>();
 
@@ -35,6 +41,9 @@ public class UIManager : MonoBehaviour
         if (initialPanel != null) OpenPanel(initialPanel);
         blocker.SetActive(false);
         blockerButton.onClick.AddListener(CloseTopPanel);
+        staticCanvas.SetActive(true);
+        dynamicCanvas.SetActive(true);
+        popupCanvas.SetActive(true);
     }
 
     private void Update()

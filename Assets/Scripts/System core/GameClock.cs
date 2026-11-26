@@ -6,6 +6,21 @@ public class GameClock : MonoBehaviour
     [Header("Cài đặt thời gian")]
     [Tooltip("Tốc độ trôi thời gian (1 = 1 giây thực là 1 phút trong game, 60 = 1 giây thực là 1 giờ)")]
     [SerializeField] private float timeScale = 1f;
+
+    [Tooltip("Thời điểm thức dậy / bắt đầu ngày mới (tính bằng phút). Mặc định 5h sáng = 300 phút")]
+    [SerializeField] private float getUpTime = 5f * 60f;
+
+    // ===== Event =====
+    // Sự kiện mỗi khi trôi qua một số giờ (tham số int: số giờ vừa trôi qua, thường là 1)
+    public static event Action<int> OnHourPassed;
+    public static event Action OnDayPassed;
+
+    // ===== Thuộc tính thời gian =====
+    public float timePassed { get; private set; }
+    public int dayCount { get; private set; } = 0;
+    public bool isPaused = false;
+    private int lastHour = -1;
+
     // ---------- Admin Controls ----------
     [ContextMenu("Set Time (Minutes)")]
     public void SetTime(float minutes)
@@ -15,7 +30,6 @@ public class GameClock : MonoBehaviour
         // Fire hour events up to the new hour if time moved forward
         OnHourPassed?.Invoke(0);
     }
-
     /// <summary>
     /// Advance the clock by a number of hours (useful for fast‑forward testing).
     /// </summary>
@@ -37,7 +51,6 @@ public class GameClock : MonoBehaviour
             }
         }
     }
-
     /// <summary>
     /// Change the speed at which in‑game time progresses.
     /// </summary>
@@ -46,22 +59,6 @@ public class GameClock : MonoBehaviour
     {
         timeScale = Mathf.Max(0f, scale);
     }
-
-
-    [Tooltip("Thời điểm thức dậy / bắt đầu ngày mới (tính bằng phút). Mặc định 5h sáng = 300 phút")]
-    [SerializeField] private float getUpTime = 5f * 60f;
-
-    // ===== Event =====
-    // Sự kiện mỗi khi trôi qua một số giờ (tham số int: số giờ vừa trôi qua, thường là 1)
-    public static event Action<int> OnHourPassed;
-    public static event Action OnDayPassed;
-
-    // ===== Thuộc tính thời gian =====
-    public float timePassed { get; private set; }
-    public int dayCount { get; private set; } = 0;
-    public bool isPaused = false;
-
-    private int lastHour = -1;
 
     public static GameClock Instance { get; private set; }
 
@@ -101,8 +98,6 @@ public class GameClock : MonoBehaviour
         if (isPaused) return;
 
         timePassed += Time.deltaTime * timeScale;
-
-        // Tính giờ hiện tại trong ngày (0..23)
         int currentHour = Mathf.FloorToInt(timePassed / 60f);
 
         // Kiểm tra khi trôi qua 1 giờ mới
@@ -118,7 +113,6 @@ public class GameClock : MonoBehaviour
         if (timePassed >= 60f * 24f)
         {
             int overnightHours = (24 - lastHour) + Mathf.FloorToInt(getUpTime / 60f);
-
             timePassed = getUpTime;
             dayCount++;
             lastHour = Mathf.FloorToInt(timePassed / 60f);
@@ -137,12 +131,12 @@ public class GameClock : MonoBehaviour
         isPaused = (newState == GameState.Paused);
     }
 
-    public string getTime()
+    public int[] getTime()
     {
         int totalMinutes = Mathf.FloorToInt(timePassed);
         int hours = (totalMinutes / 60) % 24;
         int minutes = totalMinutes % 60;
 
-        return string.Format("{0:D2}:{1:D2}", hours, minutes);
+        return new int[] {dayCount, hours, minutes};
     }
 }

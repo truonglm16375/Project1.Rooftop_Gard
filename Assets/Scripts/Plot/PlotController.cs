@@ -28,8 +28,6 @@ public class PlotController : MonoBehaviour, IPointerClickHandler
         if (plant != null) plantController = plant.GetComponent<PlantController>();
     }
 
-
-
     // ========= Hiển thị / Đóng Menu tương tác ==========
     public void OnPointerClick(PointerEventData eventData) 
     {
