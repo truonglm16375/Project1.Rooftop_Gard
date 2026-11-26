@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: "C\xE0 chua(h\u1EA1t gi\u1ED1ng)"
   m_EditorClassIdentifier: Assembly-CSharp::SeedData
   itemName: "H\u1EA1t gi\u1ED1ng c\xE0 chua"
-  itemIcon: {fileID: 0}
-  itemType: 1
+  itemIcon: {fileID: -8113185096396602001, guid: 695245bdeb0e5054b9598f5d7b6bb3c0, type: 3}
   price: 100
-  stock: 0
   plantData: {fileID: 11400000, guid: 8f9fd5107ae34d54b980f8f5aa6b7d92, type: 2}

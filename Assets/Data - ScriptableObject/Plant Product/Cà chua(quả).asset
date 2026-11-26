@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: "C\xE0 chua(qu\u1EA3)"
   m_EditorClassIdentifier: Assembly-CSharp::PlantProductData
   itemName: "C\xE0 chua"
-  itemIcon: {fileID: 0}
-  Name: 
-  icon: {fileID: 0}
+  itemIcon: {fileID: -8113185096396602001, guid: 695245bdeb0e5054b9598f5d7b6bb3c0, type: 3}

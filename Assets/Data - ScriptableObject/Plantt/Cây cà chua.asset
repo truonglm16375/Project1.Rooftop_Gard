@@ -13,28 +13,27 @@ MonoBehaviour:
   m_Name: "C\xE2y c\xE0 chua"
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   Name: "C\xE0 chua"
-  icon: {fileID: 7482667652216324306, guid: d96191789ee8a45499dd1fececc7f8f4, type: 3}
+  icon: {fileID: -8113185096396602001, guid: 695245bdeb0e5054b9598f5d7b6bb3c0, type: 3}
   stateData:
   - state: 0
     sprite: {fileID: -2413806693520163455, guid: c6ba1be248fa34d4eb1415dca1db6254, type: 3}
     timeNeeded: 1
   - state: 1
-    sprite: {fileID: -9095717837082945937, guid: 1bc0ca96b2f53ed40be18d89ce76d0c2, type: 3}
+    sprite: {fileID: 2682005716653673696, guid: 7a0cfe1dca6c8844b94a393575100b15, type: 3}
     timeNeeded: 1
   - state: 2
-    sprite: {fileID: 7482667652216324306, guid: 048e57a6f6c1de04796b749a150900d3, type: 3}
+    sprite: {fileID: 3802468843551628245, guid: 41ef491a91cc65b48aed517714de4355, type: 3}
     timeNeeded: 1
   - state: 3
-    sprite: {fileID: 7482667652216324306, guid: 06c4311857f765c4587f3b57ced3da3f, type: 3}
-    timeNeeded: 0
+    sprite: {fileID: 7752862688027755219, guid: 9ae521aaf81bb164d849df304ed29a57, type: 3}
+    timeNeeded: 1
   - state: 4
-    sprite: {fileID: 7482667652216324306, guid: 3a8680ad54929f446a9fe63acdc0d61f, type: 3}
+    sprite: {fileID: -6531769103044052873, guid: e5a7c9ec4ff0ae84abffec553928cf6d, type: 3}
     timeNeeded: 1
   - state: 5
-    sprite: {fileID: 7482667652216324306, guid: d5d0db4ec962b1548a06e28f7c87e582, type: 3}
-    timeNeeded: 0
+    sprite: {fileID: -124497223646225987, guid: 8136f61d788f36a448d29d26c544cd3c, type: 3}
+    timeNeeded: -1
   canRegrow: 1
-  timeUntilWithered: 6
   minYield: 3
   maxYield: 6
   plantProduct: {fileID: 11400000, guid: 174291d979578124a91668b15bbe9bb2, type: 2}
